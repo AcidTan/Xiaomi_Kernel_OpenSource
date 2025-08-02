@@ -1,0 +1,33 @@
+name: Build Kernel
+on:
+  workflow_dispatch:
+
+jobs:
+  Build-Kernel:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Build Kernel
+        uses: dabao1955/kernel_build_action@main
+        with:
+          kernel-url: https://github.com/AcidTan/Xiaomi_Kernel_OpenSource
+          kernel-dir: msm-4.9
+          kernel-branch: dipper-q-oss
+          config: sdm845-perf_defconfig
+          arch: arm64
+          # 调整编译器配置：使用支持 -fstack-protector-strong 的版本
+          aosp-gcc: true
+          aosp-clang: false  # 禁用 Clang，使用 GCC 避免版本兼容问题
+          # 指定较新的 GCC 版本（如果 action 支持）
+          # 若 action 支持 gcc-version 参数，可添加：
+          # gcc-version: 9
+          ksu: true
+          ksu-version: main
+          android-version: 10
+          # 移除 Clang 版本指定（因已禁用 Clang）
+          disable-lto: true
+          anykernel3: true
